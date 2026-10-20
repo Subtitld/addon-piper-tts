@@ -1,9 +1,9 @@
 {
   "manifest_version": 1,
   "id": "piper-tts",
-  "version": "26.10.1",
+  "version": "26.10.2",
   "display_name": "Piper TTS (offline)",
-  "summary": "Lightweight offline neural TTS based on Piper. 172 voices across 55 languages, 25 of them with several speakers to choose from (2,707 in all); each voice downloads on first use, 20-130 MB.",
+  "summary": "Lightweight offline neural TTS based on Piper. 177 voices across 59 languages, including 5 curated community voices (Tamil, Sinhala, Kannada, Kurmanji); 26 voices have several speakers to choose from (2,801 in all). Each voice downloads on first use, 20-130 MB.",
   "author": "Subtitld add-on team",
   "license": "MIT (add-on glue) + GPL-3.0-or-later (Piper, OHF-voice/piper1-gpl) + per-model licenses (often CC-BY)",
   "executable": "bin/piper-addon",
@@ -47,7 +47,9 @@
     "it-it",
     "ka-ge",
     "kk-kz",
+    "kn-in",
     "ko-kr",
+    "ku",
     "ku-tr",
     "lb-lu",
     "lv-lv",
@@ -62,12 +64,14 @@
     "pt-pt",
     "ro-ro",
     "ru-ru",
+    "si-lk",
     "sk-sk",
     "sl-si",
     "sq-al",
     "sr-rs",
     "sv-se",
     "sw-cd",
+    "ta-in",
     "te-in",
     "tr-tr",
     "uk-ua",
@@ -8483,6 +8487,10 @@
       "size_mb": 73,
       "speakers": [
         {
+          "id": "MSV",
+          "display_name": "MSV (recommended)"
+        },
+        {
           "id": "KNN"
         },
         {
@@ -8496,9 +8504,6 @@
         },
         {
           "id": "MNN"
-        },
-        {
-          "id": "MSV"
         },
         {
           "id": "MON"
@@ -9009,6 +9014,438 @@
       "display_name": "Huayan (Chinese, China, x_low)",
       "quality": "x_low",
       "size_mb": 20
+    },
+    {
+      "id": "ta_IN-rasa_female-medium",
+      "language": "ta-in",
+      "display_name": "Rasa Female (Tamil, India, medium, community)",
+      "quality": "medium",
+      "size_mb": 61,
+      "source": {
+        "model_url": "https://huggingface.co/tinisoft/piper-ta_IN-rasa_female-medium/resolve/89e15edafc8b31e66ddf25f2adbe3bd3f20a9496/ta_IN-rasa_female-medium.onnx",
+        "config_url": "https://huggingface.co/tinisoft/piper-ta_IN-rasa_female-medium/resolve/89e15edafc8b31e66ddf25f2adbe3bd3f20a9496/ta_IN-rasa_female-medium.onnx.json",
+        "sha256": "1befd7c4034429cecf3143d5eab4810b29833420aedb951bef4092779d074d59"
+      },
+      "license": "CC-BY-4.0",
+      "credit": "tinisoft, trained on AI4Bharat Rasa (CC BY 4.0)"
+    },
+    {
+      "id": "ta_IN-rasa_male-medium",
+      "language": "ta-in",
+      "display_name": "Rasa Male (Tamil, India, medium, community)",
+      "quality": "medium",
+      "size_mb": 61,
+      "source": {
+        "model_url": "https://huggingface.co/tinisoft/piper-ta_IN-rasa_male-medium/resolve/0b041f8e882b1e6f41f427169be25bcb0e94f352/ta_IN-rasa_male-medium.onnx",
+        "config_url": "https://huggingface.co/tinisoft/piper-ta_IN-rasa_male-medium/resolve/0b041f8e882b1e6f41f427169be25bcb0e94f352/ta_IN-rasa_male-medium.onnx.json",
+        "sha256": "0df057808d684ce59e3fd1cb02d6bfd5ef860d14a9e3c515c65ca5c61062ce39"
+      },
+      "license": "CC-BY-4.0",
+      "credit": "tinisoft, trained on AI4Bharat Rasa (CC BY 4.0)"
+    },
+    {
+      "id": "si_LK-chan4lk-medium",
+      "language": "si-lk",
+      "display_name": "Chan4lk (Sinhala, Sri Lanka, medium, community)",
+      "quality": "medium",
+      "size_mb": 61,
+      "source": {
+        "model_url": "https://huggingface.co/chan4lk/piper-tts-sinhala/resolve/18cd56d74b4860714193224d8a333ebb6f2958c4/si_LK-sinhala-medium.onnx",
+        "config_url": "https://huggingface.co/chan4lk/piper-tts-sinhala/resolve/18cd56d74b4860714193224d8a333ebb6f2958c4/si_LK-sinhala-medium.onnx.json",
+        "sha256": "64265b84e6ea227070b0eed61838dd03463a17cf0c34a2cc64297cdbbee9b5d3"
+      },
+      "license": "MIT (model), CC-BY-SA-4.0 (data)",
+      "credit": "chan4lk, trained on Google's Sinhala TTS corpus, OpenSLR 30 (CC BY-SA 4.0)"
+    },
+    {
+      "id": "ku-kurmanci-medium",
+      "language": "ku",
+      "display_name": "Kurmancî (Kurmanji Kurdish, medium, community, 90 speakers)",
+      "quality": "medium",
+      "size_mb": 74,
+      "source": {
+        "model_url": "https://huggingface.co/atenax/kurmanci-tts-piper/resolve/054099b3aa363625feb30c456a8f98ab27b72dc7/model.onnx",
+        "config_url": "https://huggingface.co/atenax/kurmanci-tts-piper/resolve/054099b3aa363625feb30c456a8f98ab27b72dc7/model.onnx.json",
+        "sha256": "00fa60879b1491f3fbacded02e6ee72d1239d4eaf172e0b268e4a99d3512ea48"
+      },
+      "license": "MIT (model), CC0-1.0 (data)",
+      "credit": "atenax, trained on Mozilla Common Voice Kurmanji (atenax/kmr_tts, CC0)",
+      "speakers": [
+        {
+          "id": "13f8fa3de28cd303e7920db583a83ff0a6ee6abecf76f445444d702db8f00768953e979af2e9929fa8f7a4be362f4107e1cccc5261cdbb6bb85ed207c0c2f294",
+          "display_name": "Speaker 54 (recommended)"
+        },
+        {
+          "id": "85084e5a3d8d8c7950d4c6cd07f8d6251c679526bcd7ebade53274da5194b3e7fe4e6c1d19d7ae8fba8f6788a46dc1e0c63de5bb1107d2d00e930f2dcadfd9a5",
+          "display_name": "Speaker 0"
+        },
+        {
+          "id": "e4869ada5cecd3104efaf64c7b5287275c9b944164b35a813b992788047f1344f2ef01f2be8a5c60473a81f78b4e3269343d171f5c1cae3d0632fd5949b395b2",
+          "display_name": "Speaker 1"
+        },
+        {
+          "id": "e017d8a79a88825ffdbe2d9a968954f7a687dd4fea4da7347cf95529b49a31f2b55413805585877432dee942c4ab6cefa576e7f7c35e6cf88e8625603154f066",
+          "display_name": "Speaker 2"
+        },
+        {
+          "id": "08cbb5d9e19f10ee6237ac5d599c700b598323c7c929afddffa6ee03f3aa38393de20be4e4347525e1e6317f7fe4303d08d70be8a1f9a424b4724f0c098a7ed4",
+          "display_name": "Speaker 3"
+        },
+        {
+          "id": "b78bd4eed2475038bc2afcd9e92547b4c17ca844360a173efbaf5deefc297362dbcd14ab7a127a761f4f32f198f6857b2da5dd55fb2f1e820d7b7690ac78740a",
+          "display_name": "Speaker 4"
+        },
+        {
+          "id": "8aee824997a5cf0ccd02804abc7c051ae35f93b2ab7d8d872ab5b86ce9ae2e47b3f9d7fbb4c40b867f794d37f510b8cc29ad8de0e61fcd2fa5dd6ad12f92ff70",
+          "display_name": "Speaker 5"
+        },
+        {
+          "id": "b9f94292ae3a63540f28035563ef70bc06729b306baed179139a160c3d28ce20958a5a16b553e7b58cdf1a78f21b5e7c6c31d482a1321caa478525b718dde146",
+          "display_name": "Speaker 6"
+        },
+        {
+          "id": "9d1166a5fba0c190b5756878445d8b58512455547e379f0bc567584b9d98c6b498a7f7c7747acf90b6ab254da0a3668e13c5a1d45a301cdf0795d1c61fa1e162",
+          "display_name": "Speaker 7"
+        },
+        {
+          "id": "3fdbb5e98b99fae81ac85101fd3a6a80a3ea583feef732aba5cf5d57b9cfc3d078300124d24bbee9b35fe1aab6896a80fbfd481446b3367416a4e159d8dabe9b",
+          "display_name": "Speaker 8"
+        },
+        {
+          "id": "5f68c10a7bf7ad8635ecb31b5ce5a99bc5578a8845ea7fe00cdbbcd584f7f7878f73d6bbfcfdaf356557f0fb77d3853d445aee90ed76139d810284c3438e3903",
+          "display_name": "Speaker 9"
+        },
+        {
+          "id": "787b42e125f66a8c323b568cd83d69fb43dc190c294565aa73c23d6334a0cf4fe733f257e014a63c8ed6e6596bf5b17a48a7ed5674db7e90fbbc27b52fbf658b",
+          "display_name": "Speaker 10"
+        },
+        {
+          "id": "10a07fc2133e0b7b483fbffb1f54eb95af59e14b9e6f168e2fbfc67653bcd40c0453df333bd48cbba7aac6d1a9e08e88e4def27793ae43c4f4ee831ab3017860",
+          "display_name": "Speaker 11"
+        },
+        {
+          "id": "fb13aefc38c1d10ccb2b0c9c54f750ef50a61d3c0c7c0bd243d93279eb45afbca8875a0033dd1ab0a64e7e55120b1988240c03a3eeb4efdce628b27fdbb91fae",
+          "display_name": "Speaker 12"
+        },
+        {
+          "id": "cee6526f984025aeb1a2deec2fec20e88a212b0dacb4fe105f3969fcf8e0d90eed6f7d4c2e26d6e658fe100341d0d2d8d769dbd18000be9fec6a2f0c4faba086",
+          "display_name": "Speaker 13"
+        },
+        {
+          "id": "345e5b000b4acd4417cbc26ffc691464a06cfa4cb969339c517942d7b054ea2b4b5c22f0c9e9c4f67e545ce87d9c2bda4d4fc23a1b50bd964c3598a784a6f75e",
+          "display_name": "Speaker 14"
+        },
+        {
+          "id": "770204a24df5d11fcb9b0948fdf341c3431129e497759395331075c1917298d994ea5b3ec9bc96b31bdacb13809e29077dcd27c2eaa4a12fbde3b12da67d4b6b",
+          "display_name": "Speaker 15"
+        },
+        {
+          "id": "e789170f1ef2ebf153b10f8acda2fdd587dca27bc4640cad08736eece09f6411152c0b74d01aa85afb68d016c91522cb7b386d94475ecde4abe87927bf16ecaf",
+          "display_name": "Speaker 16"
+        },
+        {
+          "id": "2a5d6dbf138aec9569b5d6b65fa02b93c66b1706224fb12c4903242aee1c2b4e692e42c9f2863c59db69ef5054e7bd420b720498afe580bf9874a84d4ec60326",
+          "display_name": "Speaker 17"
+        },
+        {
+          "id": "657e456e5f4a4a7ec1b91e87d0f1b090ad1081fb0a612852551b3c340f718de71d99455abbbddf93ce3ac12282504f605d90f203812da5d810493b2f603ed92d",
+          "display_name": "Speaker 18"
+        },
+        {
+          "id": "1baf64fda99436d1382b3f9334ebc4a53c46894ad4fbdac155e77daf7714f446e23bad9339154f379d40a585200e347d6944dd074b8d8a152dd5c8f0ae5c9e68",
+          "display_name": "Speaker 19"
+        },
+        {
+          "id": "2db69ac1cdcec005c9dd99ec67393df235eddf6e6ad2ca595b9bd7e6483b2119280d1dbfc9e4646d9fe2929cc596fc6c8dfdabbf79d96301fdfd1d354230752f",
+          "display_name": "Speaker 20"
+        },
+        {
+          "id": "a3bf8d80a6c842ff5fef1555b7462d268ba3cae0c2c038ff5ea39b3eb374574892c1af6a5319c29486cd644933c6ee87933bc3f1684cd3904c30ad949bf17809",
+          "display_name": "Speaker 21"
+        },
+        {
+          "id": "5ef3fc3384a3bfabec123ffdcc84b15ac6f38b0a34b78c470a9dd02a8af866ed45ce93274823acd24f73be255b270a06de3caf4b336dc152fecce7f8ed524e72",
+          "display_name": "Speaker 22"
+        },
+        {
+          "id": "47b795343756c47fe2daa76508bd608179a68e1d85703e75775462d674732bbb5c63747e08f8eec488c35c39718c8d4bce22d43c2c220ec61cc8361cf8047195",
+          "display_name": "Speaker 23"
+        },
+        {
+          "id": "50b9dda8ec24f8988432f02d0fb8fda2e669f7d664e0730f089e1185bcaa245362b08cd0f9ca97bfd09f867c7011fb32ad5139d153571c456ecd3b65989f5afd",
+          "display_name": "Speaker 24"
+        },
+        {
+          "id": "8ae60367a33627c94fd7fcce570f6242dd52aa78de90ff179f85bbe48e8adff2ee9ea30658ff18bb6f526caa2fc33bf6b24fc3b6d5dd07f283435f9074164dff",
+          "display_name": "Speaker 25"
+        },
+        {
+          "id": "1e7e54268e9caec4e5cdc21e36cfc22507370cd62f28ed8b06b9e743b9c54e9b94fa0116c309d85726a65f84f7c1a2028115e8f5803e2c4f4b258cbb24f438d7",
+          "display_name": "Speaker 26"
+        },
+        {
+          "id": "5a7a22c8c69596ffffedf5555f5b29d762bda78a9d3a49f224411d28e39a62ac830b26550264839a79e4a4296e786f3fe854cf59dfc1effa733688b25fff1368",
+          "display_name": "Speaker 27"
+        },
+        {
+          "id": "49e57b54df0a8dcca3c342e11ba81ca099c1ad6037d916166d133f832d408a05026230d9c1a6ed467bd8c752a78ecc9812f0ce5eb994e4c5efc89daa9dbfc34a",
+          "display_name": "Speaker 28"
+        },
+        {
+          "id": "2a77aec76fcd7b8ebe59b0b747a41ad116546d188028432a07a4ed95f44d7fc96436ba527baccc3a167300282b427e92f178c9b6be6cf794f0e870dcb50eb182",
+          "display_name": "Speaker 29"
+        },
+        {
+          "id": "339b73f76ca62264fff511406d93f2d64a636b57cd404dcd95208b43dc5ae084faac9251d206a15e90b234ff204acbfe36e6b9f3fb101309f6e3429fe5e7f8a8",
+          "display_name": "Speaker 30"
+        },
+        {
+          "id": "5cf0fcc7d2d6a25462edeec6ba8b7bba20b10b68f2061345260794dc1746dd3f205b487a6f950ed4bcdaee1ec62ec924d060ebddf036ba7ead062349d67290c4",
+          "display_name": "Speaker 31"
+        },
+        {
+          "id": "1a3c680e9d9a3765df709d9c536781a11ef9cf680664b36498bbe4c01b031051aa9ed80b0bc4dfa29efba15ea74fabd6be1a4b7c172a15ecd9a7878bb10fd4b1",
+          "display_name": "Speaker 32"
+        },
+        {
+          "id": "9d37a914b015faabdde12a4eebae321324329d51a84faa16f57fa42db370ef84b9b28e4e6d035115085af55a5d5457b9ffd049131493078525aa68dbed8a1e3e",
+          "display_name": "Speaker 33"
+        },
+        {
+          "id": "a0ff8cf5edee565d0a8f565e94b8ccc6b5f641b06d2e7d8680c39ff4b185fa52a6014fa8724df8a1a17ea8dd0afc93f1222b172a15ec857c03853ae4037b5b36",
+          "display_name": "Speaker 34"
+        },
+        {
+          "id": "ce4cc8a28cd74ce986398f0385c98a7a70bf52bdb1e5619ae48abe69f167cd7b01365b7dce9ba66b930351aee83fb286989e4ada27ea2512476bdfffab7695f1",
+          "display_name": "Speaker 35"
+        },
+        {
+          "id": "c4d81e145cd80fc83d8e95ae005bbfe09edc6e715d9278f3dc88fb0e64ecd4d9b140e7814b79a0215845bd6bcff7d0a818b2da61c50ef00f2ce51a26ff3f9989",
+          "display_name": "Speaker 36"
+        },
+        {
+          "id": "8d26b739b0e493b5251dce2e19fee7e85fdc0432c281752f3fb14e34af7770f1fd77b659a23ea15dcdbfd3527f7f52070d76c0a65f8f94c583a68f3d56a21076",
+          "display_name": "Speaker 37"
+        },
+        {
+          "id": "c760a94516a7eaacd6034fd288722b257689c7780c4ce1d25b828f1d3af88bd2c8b715dd23b16d6f066bd8792086c2da07585b618b330e86a528bcc3ec639864",
+          "display_name": "Speaker 38"
+        },
+        {
+          "id": "2fd0c19ec12bea6c5a7363bc9b57749c70aa048a2b8bc5ead557d381bd267e5376b9c3c8b17626ec89156c169bbac01d193df49fc34b89e2bcc6439a39a33152",
+          "display_name": "Speaker 39"
+        },
+        {
+          "id": "82735faeca0e9e8f1b2fa7e9abeb892f948c46ab1811f3fa9bfedd2b80102885fdde35fddd3c7f926c0fa15bb79abf01f44b23c34eda428281a8212810a025d4",
+          "display_name": "Speaker 40"
+        },
+        {
+          "id": "b566159714f70684242d2e454ec4cae3567987571341373e3413b703aba469b7ae28398e0fcd65a299cfa2a5ca16ac93c7938264aca6ef7b97d51669c4c088f2",
+          "display_name": "Speaker 41"
+        },
+        {
+          "id": "2163d989851760a2fb84e09facf022029504ac7cebea411f9213d8b7f0fbedbeefeb7213192f02e7c319a5c66906777885a6431d912429c3bd8e1ce8dae3bd28",
+          "display_name": "Speaker 42"
+        },
+        {
+          "id": "f7e1113dae783eadd7d0d315512258a40e57564f633a11f4e43f4519a4f193d3d8d114ec24c04139d8f8d7e7d28ea036c9a40471eeabdb07576da9bd4667be98",
+          "display_name": "Speaker 43"
+        },
+        {
+          "id": "3cb07a8f4dc0a10695352371cc054f8010d275b05de72a3b2ae05dea5b553b56f7a728101ee07c64f8fdccd04f1289c94164654cedbc9f6ddd603aa979593fb0",
+          "display_name": "Speaker 44"
+        },
+        {
+          "id": "4cc580afa0d034c4f530c86834c4df5c039d3fd98f89c44d39382d56c3413c6d4c79b3a662314d12c91165f950c20621aa587bc722bcbf45d947a0679271292e",
+          "display_name": "Speaker 45"
+        },
+        {
+          "id": "6f574e284b6bcdfcfce1ccf4e7c1108039dca7e75a37b2452ee271f17d55721f81ad2bd67ca50b6d723a0abe40f3b118c62c9ec0ba2c499684621e71035de092",
+          "display_name": "Speaker 46"
+        },
+        {
+          "id": "4c9cf018f4fa559aecd719a90f95146d13a340e388500046e27d85e4abfe4c3317eb6b837417f910461fd03899cadcbad246c4da63cdad278231b9eeb7a8a824",
+          "display_name": "Speaker 47"
+        },
+        {
+          "id": "0ab5ad211da481b9b36123a824be9cbc41a7f4a5f037988663e4412c2a67cdede87f28c44003a06740e13b905239d3810200691574af0bb674a24fb058537d18",
+          "display_name": "Speaker 48"
+        },
+        {
+          "id": "3f537baedf8058b8602f6d3513a14150dc805d839ab7fe54d9c88690c1c33834e37e35c298f6c5f6f695a9a01813cbec21ae7429d731293581bc8f7dd5d5c1c7",
+          "display_name": "Speaker 49"
+        },
+        {
+          "id": "50cc69aaaf92ffc49d47235589c0ea5445ca18c680f0d21945a448a5fcc207914a36d6b3ebd31c2fa5e46a5d5d1f73cd4d1a9ad7c1b18073717b116aab1652a8",
+          "display_name": "Speaker 50"
+        },
+        {
+          "id": "633e5e999c875d46d60ba92f68b9e82cb88a3bb6b6716742e213ef3976758d71ea7956ddd40cbd421d3f1b93b778dcca7f103d71964d61d065027e777e6ec2b8",
+          "display_name": "Speaker 51"
+        },
+        {
+          "id": "7acf023728c688bf9b3abf9bdd26d642eec66969d3805a2e1a597f001320ca2e045fb8d90d52c98bc00cda7c23ec4520428a81a19031002fe1dbfbae4fafb110",
+          "display_name": "Speaker 52"
+        },
+        {
+          "id": "133d15fb81f8496b0a7fce0164a300e4f691a37ef6f4654358cf3abc98710cd43f103ecaed09cd7ed4074fa7b3316522f017a219d14831290c56c746f1fa5059",
+          "display_name": "Speaker 53"
+        },
+        {
+          "id": "c99b5b117ef35fc34cceb3aa9ebc4c19ac7e87e65ce40e1f21bc9a5540674e47f0fb8f94731c87a55a8755114b6040b7abec4a389927bdda5fbc50ee39c9de1b",
+          "display_name": "Speaker 55"
+        },
+        {
+          "id": "e92af780c8974638968c7387c8280d280036389857142f62601921b77c6f72594cf98fe2820e6631e1e9e88bff84a36f900bb90d275e1741f81d71489c6a7ddb",
+          "display_name": "Speaker 56"
+        },
+        {
+          "id": "0147f395f21447384e6a72885ac3ec1b7e075eb3c4bf32c8dc4e40ff53d1468726de255961bfb17b5dcf65ece4f25695274a63869a1f98dffe7f83cbbc2ef919",
+          "display_name": "Speaker 57"
+        },
+        {
+          "id": "054a93868052caa53cdc4098294f0ef4f53d216fa5a9396768fcf729aaf72ebb37c9711181dfadf5f2f09fdd5839e15994f04b34b8890221068c6b2cf6caabdb",
+          "display_name": "Speaker 58"
+        },
+        {
+          "id": "df07c6decb0a899258baa8bf15b80e5e43de6b1f4b61ddae746a11396fe70f774c983ecd5d26445955baa570810758f4a9d9148a1a74f715ced959434180e603",
+          "display_name": "Speaker 59"
+        },
+        {
+          "id": "f3dac0e3dfc11f1283eb617ac202b1374b1538e947248976c1bc1ebb9018c0743e38337614f3e8eeff94edaf2c355e180ffc1a69bd93c8720561c2fd348cc7be",
+          "display_name": "Speaker 60"
+        },
+        {
+          "id": "505a28a93d5583a006beac7fdf5f12411609900dfc7635ee5fccb4a74c8669262b725cfdc45b21864dd81f547932d1f627d6d25a4f47155af5929d3bb870b4c5",
+          "display_name": "Speaker 61"
+        },
+        {
+          "id": "15ef08cd31b2c3387ff4322d011e70261d285a974abe3faf4ddb84c1924e12cc0c9460bf8a9a6c6c8f13751ee2e804b16faa507e2838e03400b88a362a4acc86",
+          "display_name": "Speaker 62"
+        },
+        {
+          "id": "2a9dc9a0aedd33ad37f1b37ae0659d43661f918b7b900d77d39ca92c9c628a05e589a1e7b0c00a231ddc93ab7c4d54bb8afc8d566c9b1eb1899e243a9c4fa00f",
+          "display_name": "Speaker 63"
+        },
+        {
+          "id": "2f60b127e4975b62864f78096bcf6bc0dc87945e35a2c15e976117150ffdab4a8eaba33c3005419c6d7ea303f6ff61c7e0c5bc4573adf0d3a8917f9592159950",
+          "display_name": "Speaker 64"
+        },
+        {
+          "id": "2b385909dc1cc333f47b809c9d8a0a046da13fd26119634faf08096ac12b3ccbb2097ab86e6ada497a3a91d2223d9abcf7b8d979a3dfebb37c25b63a1fe29d92",
+          "display_name": "Speaker 65"
+        },
+        {
+          "id": "30aacddb21240c761ba9560b27223e2b65db26e4c76acd57b0505217dcf5aabcf9f3e30b1bc3784661e21dcacede07836ed36b2572bd035bd588de693367df75",
+          "display_name": "Speaker 66"
+        },
+        {
+          "id": "a1d586b177c7f98efc6e913522b21c1c7e8b9d969684ed648ee12e4c55dc513d9aa389cedb8eb8364dc62d66c9f443a30de0740b466936a805d2763d90cccd66",
+          "display_name": "Speaker 67"
+        },
+        {
+          "id": "d72417719bdf5ea0cf77e9b3a0800b602820516019bf9432e0f8f2d370e0d1e6ffceecbd54d79e49fa4bb8d1797a100a2c0ee9e1f7afdf188c11765ae077c4ba",
+          "display_name": "Speaker 68"
+        },
+        {
+          "id": "d97b08493d60627c812c0e15d2f3e76cb45da0c413ad2a054a8099d6b03b5cb16f8100089b6c63d4c18d0b3da2b454172e09390284f01ad79c43d0e56a853844",
+          "display_name": "Speaker 69"
+        },
+        {
+          "id": "5b3caaf77d79f1d1c9f3060a1f0d72a5ed02a8e0034257f6670e6c79115c2e602af33043c1d8d19b798c6f430e6c398ba512982328d256e93ac54fddff325a6a",
+          "display_name": "Speaker 70"
+        },
+        {
+          "id": "17e137bbde4e972f00c0eb5eb7131223ff5fdc20355de5c66521758f3c4b53601d9308c6daa725b1cf654fcdfcafd6cae9bc3eecf02205d1cfebe6f02097084a",
+          "display_name": "Speaker 71"
+        },
+        {
+          "id": "35e6ad83a92d071533a413cadf9fdba0f8c178c2f75ecd27068689af5a482e9b0a7c35cbec20aa65ae6d85d1e6560d3abacd05b982cb6d4bc42501bba8585183",
+          "display_name": "Speaker 72"
+        },
+        {
+          "id": "fcae40fe59ac7057cca99d3d734d31fccaf6b34127bae78824ee36328f9335395e2300f98d91c755453ccc0e3417b9e8738f2383e789bb1eacabc5912be21be8",
+          "display_name": "Speaker 73"
+        },
+        {
+          "id": "f95d226f37826da62a2b8cd764b021551b81b9ff671499625237c15183e2c2ba3d2c5604c38aa9e094251dc81ec91fa0ffbc440831805c6532f61cccd29c0e6f",
+          "display_name": "Speaker 74"
+        },
+        {
+          "id": "6c48f264cee8ddc87c12b295e79484cc38fac81db6bb54dc691e42ee49a7f58f4c500930096b1776cf8383d7e23dfa3ee7aaa13b5277e9c14f64848ac2d0cc2a",
+          "display_name": "Speaker 75"
+        },
+        {
+          "id": "58cf9ccaa4feac8b0bda0c8a4e62456c3792fe291d8ce16a719e4e3e0a5e863b93e3cb7705e20febc6cd8a788a29611f13a1421ed4ec9526fd2c76d6922aa4c7",
+          "display_name": "Speaker 76"
+        },
+        {
+          "id": "99f4a7fde4dcb7d959e19d08626c57a7b498201306f057dc41c9fefbb3dc336a1f21f7e91960f3c25c0070f1a32b1be0fd16e732c814cdd14ed92b2b7b23aac3",
+          "display_name": "Speaker 77"
+        },
+        {
+          "id": "4fb487552e25dda20a70ba751a244a46e2e89eab89fad9815a8264d9f12dcf998aa8bfaee85c6d9a465a9b7be2228fbdc033407ca8037ea1eb2fea0bdb738133",
+          "display_name": "Speaker 78"
+        },
+        {
+          "id": "6b1e829792cdafe295ea9a7341ededd7bdc05866af268370091297983fe8985a429bd026cb871ccf8f2658a724e41839564ed3401b9cbe0c6df4217414dc3087",
+          "display_name": "Speaker 79"
+        },
+        {
+          "id": "a253a7d0f1d821349e50bff8483513c2ff35e1cc47c9d381dda3795dca1db1064146a3b926dc34eb02f2395ec13153137c2193fd793952d6798d3a6dd3ce1c44",
+          "display_name": "Speaker 80"
+        },
+        {
+          "id": "3b51a7fa8598bcb935ee2591974b75a84514823f81305d2171ea50bb333c1af63f44de4bdd16fea70a2e283813c5fc9e99957b5b960e1a64847943e64b0621ed",
+          "display_name": "Speaker 81"
+        },
+        {
+          "id": "c64304f7e80d24066feb3da2a2b526c78f8373458e248fa2c866808fc3c4759316930b1f0434b124740537b21b6b97aa0fc84d9d6456de740b412f29eaa39cd1",
+          "display_name": "Speaker 82"
+        },
+        {
+          "id": "c98e00fbd1c9d89041bc929b83c8b7b3ebd74e322cf35d344897214d0548d317be7ed76808b1239236318c5b1cb54dd36c5ac7b2a109c9a590dd73fce49c9058",
+          "display_name": "Speaker 83"
+        },
+        {
+          "id": "0af1f8fc3a76f79cda21b1fe5525cdede5e4edb31ed04344e6b0d4fe4b2004b17d099649ce75ff2b0c08eaaa0d8aafccd43dbdc2a80979a5ca9f122422389d37",
+          "display_name": "Speaker 84"
+        },
+        {
+          "id": "9e1e1d3008c69ec8f09ec6d61f06576bfccdfa032bc7f8e655000e666c3d3f3090eea080cada39dd9f8b51c055c23fbf77386065eee6a7a30306ae838c836f18",
+          "display_name": "Speaker 85"
+        },
+        {
+          "id": "31b022d3ef5c5f3fcede348c460ba90b57c28d6ddd0ccb1fd0b3ab2032b6a37e07b8da4891979ce8998bb09b645fc88f99875689fe3276920f979c11dfad63d9",
+          "display_name": "Speaker 86"
+        },
+        {
+          "id": "50344c8f5ed78a23b88660041c433a06ff3baf0c825bcd0e8d2455e53222e08919b129471f79cdf8e0c5cf3a08d954aa2bfccb5439b2857cb8c36b97312f8bef",
+          "display_name": "Speaker 87"
+        },
+        {
+          "id": "b4078a810804b115ffdca2fc7229286b2bb58c9e973f8d9491be7eb981620fa826eee84c2c1c3814a56fa78cf8f53f0e9b949295b53f15611f876073d8e73019",
+          "display_name": "Speaker 88"
+        },
+        {
+          "id": "01c2f92639600ca9c360f84a6f8d3aac5406a8178c1da3e06c3ba47f348d725f63d75735f1da4d4e0208b7262bf75fee9b3cfc8b04997c7455e97d0dfd43fa4c",
+          "display_name": "Speaker 89"
+        }
+      ]
+    },
+    {
+      "id": "kn_IN-syspin_male-medium",
+      "language": "kn-in",
+      "display_name": "Syspin Male (Kannada, India, medium, community)",
+      "quality": "medium",
+      "size_mb": 61,
+      "source": {
+        "model_url": "https://huggingface.co/micahchoo/piper-kn/resolve/c73546cb70012e28f6093a61c71162924398fee1/kn_IN-syspin_male-medium.onnx",
+        "config_url": "https://huggingface.co/micahchoo/piper-kn/resolve/c73546cb70012e28f6093a61c71162924398fee1/kn_IN-syspin_male-medium.onnx.json",
+        "sha256": "bff423259625c0c1182e5b417f68560b6a55f3c4d27557a6abf2fbe51e7e00ee"
+      },
+      "license": "CC-BY-4.0 (data); fine-tuned from en_US-lessac-medium",
+      "credit": "micahchoo, trained on SYSPIN Kannada, IISc Bengaluru (CC BY 4.0)"
     }
   ],
   "disk_required_mb": 200,

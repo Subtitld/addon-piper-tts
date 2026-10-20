@@ -1,0 +1,66 @@
+{
+  "_comment": [
+    "Community Piper voices, curated by hand; tools/regen_voices.py merges them into manifest.json.",
+    "Each is pinned to a Hugging Face revision, so the files can't change under us; the add-on checks the model's sha256.",
+    "To add one: the licence must be stated on the model card AND allow commercial use, the training data must be named",
+    "with its own licence, no game/celebrity/cloned voices, phoneme type espeak (or another piper-tts 1.8.0 handles), and it",
+    "must synthesize through piper-tts. Seen on piperhub.org (2026-10-20) and checked there: see README's Community voices."
+  ],
+  "voices": [
+    {
+      "id": "ta_IN-rasa_female-medium",
+      "repo": "tinisoft/piper-ta_IN-rasa_female-medium",
+      "revision": "89e15edafc8b31e66ddf25f2adbe3bd3f20a9496",
+      "model": "ta_IN-rasa_female-medium.onnx",
+      "language": "ta-in",
+      "display_name": "Rasa Female (Tamil, India, medium, community)",
+      "quality": "medium",
+      "license": "CC-BY-4.0",
+      "credit": "tinisoft, trained on AI4Bharat Rasa (CC BY 4.0)"
+    },
+    {
+      "id": "ta_IN-rasa_male-medium",
+      "repo": "tinisoft/piper-ta_IN-rasa_male-medium",
+      "revision": "0b041f8e882b1e6f41f427169be25bcb0e94f352",
+      "model": "ta_IN-rasa_male-medium.onnx",
+      "language": "ta-in",
+      "display_name": "Rasa Male (Tamil, India, medium, community)",
+      "quality": "medium",
+      "license": "CC-BY-4.0",
+      "credit": "tinisoft, trained on AI4Bharat Rasa (CC BY 4.0)"
+    },
+    {
+      "id": "si_LK-chan4lk-medium",
+      "repo": "chan4lk/piper-tts-sinhala",
+      "revision": "18cd56d74b4860714193224d8a333ebb6f2958c4",
+      "model": "si_LK-sinhala-medium.onnx",
+      "language": "si-lk",
+      "display_name": "Chan4lk (Sinhala, Sri Lanka, medium, community)",
+      "quality": "medium",
+      "license": "MIT (model), CC-BY-SA-4.0 (data)",
+      "credit": "chan4lk, trained on Google's Sinhala TTS corpus, OpenSLR 30 (CC BY-SA 4.0)"
+    },
+    {
+      "id": "ku-kurmanci-medium",
+      "repo": "atenax/kurmanci-tts-piper",
+      "revision": "054099b3aa363625feb30c456a8f98ab27b72dc7",
+      "model": "model.onnx",
+      "language": "ku",
+      "display_name": "Kurmancî (Kurmanji Kurdish, medium, community, 90 speakers)",
+      "quality": "medium",
+      "license": "MIT (model), CC0-1.0 (data)",
+      "credit": "atenax, trained on Mozilla Common Voice Kurmanji (atenax/kmr_tts, CC0)"
+    },
+    {
+      "id": "kn_IN-syspin_male-medium",
+      "repo": "micahchoo/piper-kn",
+      "revision": "c73546cb70012e28f6093a61c71162924398fee1",
+      "model": "kn_IN-syspin_male-medium.onnx",
+      "language": "kn-in",
+      "display_name": "Syspin Male (Kannada, India, medium, community)",
+      "quality": "medium",
+      "license": "CC-BY-4.0 (data); fine-tuned from en_US-lessac-medium",
+      "credit": "micahchoo, trained on SYSPIN Kannada, IISc Bengaluru (CC BY 4.0)"
+    }
+  ]
+}

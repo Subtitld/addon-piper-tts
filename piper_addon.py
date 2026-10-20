@@ -18,6 +18,7 @@ Implementation notes:
 
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
 import os
@@ -48,7 +49,7 @@ except ImportError as exc:  # pragma: no cover
 
 PROTOCOL = 1
 ADDON_ID = 'piper-tts'
-VERSION = '26.10.1'
+VERSION = '26.10.2'
 
 # rhasspy's piper-voices repo on HuggingFace lays files out as
 #   <family>/<locale>/<name>/<quality>/<voice_id>.onnx
@@ -159,7 +160,31 @@ def _voice_id_parts(voice_id: str) -> tuple[str, str, str, str]:
     return family, locale, name, quality
 
 
+def _manifest_path() -> Path:
+    # Next to this file: the repo root from source, `_internal/` when frozen
+    # (the spec bundles manifest.json there).
+    return Path(__file__).resolve().parent / 'manifest.json'
+
+
+def _community_sources() -> dict[str, dict]:
+    """`source` of each community voice in the manifest, by voice id: its
+    pinned download URLs and the model's sha256 (see tools/regen_voices.py).
+    Official voices have none and use `_voice_url`."""
+    try:
+        manifest = json.loads(_manifest_path().read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return {}
+    return {v['id']: v['source'] for v in manifest.get('voices') or []
+            if v.get('id') and isinstance(v.get('source'), dict)}
+
+
+_COMMUNITY_SOURCES = _community_sources()
+
+
 def _voice_url(voice_id: str, suffix: str) -> str:
+    source = _COMMUNITY_SOURCES.get(voice_id)
+    if source:
+        return source['config_url' if suffix == 'onnx.json' else 'model_url']
     family, locale, name, quality = _voice_id_parts(voice_id)
     # Quoted: `pt_PT-tugão-medium` has a non-ASCII path, which urllib
     # refuses to send as-is (UnicodeEncodeError, not an HTTP error).
@@ -168,7 +193,7 @@ def _voice_url(voice_id: str, suffix: str) -> str:
 
 
 def _download_with_progress(url: str, dest: Path, on_progress,
-                            attempts: int = 3) -> None:
+                            attempts: int = 3, sha256: str | None = None) -> None:
     """Stream `url` to `dest`, atomic-renaming from `<dest>.tmp` once
     complete. `on_progress(bytes_done, bytes_total)` fires after each
     chunk; pass a no-op when you don't care.
@@ -180,7 +205,11 @@ def _download_with_progress(url: str, dest: Path, on_progress,
     A read that stalls or drops is retried, resuming from the bytes already
     in `.tmp` (HF's CDN honours `Range`): the "high" voices are 114 MB, and
     one stall near the end used to throw the whole download away. HTTP
-    errors (404 and the like) are not retried."""
+    errors (404 and the like) are not retried.
+
+    With `sha256`, the finished file must match it or it is discarded
+    (ValueError): community voices come from repos we don't control, pinned
+    to a revision whose model hash is recorded in the manifest."""
     tmp = dest.with_suffix(dest.suffix + '.tmp')
     tmp.parent.mkdir(parents=True, exist_ok=True)
     try:
@@ -220,8 +249,15 @@ def _download_with_progress(url: str, dest: Path, on_progress,
                     raise
                 log.warning('download of %s interrupted at %d bytes (%s); resuming',
                             url, done, exc)
+        if sha256:
+            digest = hashlib.sha256()
+            with open(tmp, 'rb') as f:
+                for block in iter(lambda: f.read(1024 * 1024), b''):
+                    digest.update(block)
+            if digest.hexdigest() != sha256:
+                raise ValueError(f'{url} does not match its recorded sha256')
         os.replace(tmp, dest)
-    except (urllib.error.HTTPError, urllib.error.URLError, OSError):
+    except (urllib.error.HTTPError, urllib.error.URLError, OSError, ValueError):
         # Clean up the .tmp file so the next attempt starts fresh.
         try:
             if tmp.exists():
@@ -267,7 +303,7 @@ def _ensure_voice_files(voice_id: str, on_progress) -> tuple[Path, Path]:
             except urllib.error.HTTPError as exc:
                 if exc.code == 404:
                     raise FileNotFoundError(
-                        f'voice {voice_id!r} not found on rhasspy/piper-voices'
+                        f'voice {voice_id!r} not found at {_voice_url(voice_id, "onnx.json")}'
                     ) from exc
                 raise
 
@@ -287,6 +323,7 @@ def _ensure_voice_files(voice_id: str, on_progress) -> tuple[Path, Path]:
                 _voice_url(voice_id, 'onnx'),
                 model_path,
                 _scaled,
+                sha256=(_COMMUNITY_SOURCES.get(voice_id) or {}).get('sha256'),
             )
 
         return model_path, config_path
@@ -417,7 +454,7 @@ def main() -> int:
     # Build voice/language inventory for the hello frame from the manifest
     # we ship inside the bundle. This avoids having to hardcode a parallel
     # list here.
-    manifest_path = Path(__file__).resolve().parent / 'manifest.json'
+    manifest_path = _manifest_path()
     voices: list[dict] = []
     languages: list[str] = []
     if manifest_path.is_file():

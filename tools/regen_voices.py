@@ -10,16 +10,23 @@ rebuilds the list from it instead:
     python tools/regen_voices.py --check      # CI: fail if manifest is stale
 
 Multi-speaker voices get a `speakers` list read from each voice's own
-`.onnx.json` (`speaker_id_map`), ordered by speaker index so the first entry
-is the speaker Piper uses when none is asked for. Subtitld shows it as a
-separate "Voice speaker" choice next to the voice. Voices whose phoneme type
-this build has no front end for are left out (`UNSUPPORTED_PHONEME_TYPES`).
+`.onnx.json` (`speaker_id_map`), the speaker Piper uses when none is asked for
+(`default_speaker_id`, usually 0) first, then by index. Subtitld shows it as a
+separate "Speaker in this voice" choice next to the voice. Voices whose
+phoneme type this build has no front end for are left out
+(`UNSUPPORTED_PHONEME_TYPES`).
+
+Community voices, curated in `tools/community_voices.json`, are appended
+after the official ones. Each is pinned to a Hugging Face revision; its
+manifest entry carries the download URLs and the model's sha256 under
+`source`, plus its `license` and `credit`.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import urllib.parse
 import urllib.request
@@ -28,6 +35,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 MANIFEST = REPO_ROOT / 'manifest.json'
+COMMUNITY = REPO_ROOT / 'tools' / 'community_voices.json'
 VOICES_BASE = 'https://huggingface.co/rhasspy/piper-voices/resolve/main'
 
 # Phoneme types this build cannot speak, read from each voice's own config so
@@ -70,10 +78,60 @@ def _config(entry: dict) -> dict:
     return _fetch_json(f'{VOICES_BASE}/{urllib.parse.quote(config_file)}')
 
 
+# Speaker names that are opaque hashes (Common Voice client ids, as in the
+# Kurmanji voice) mean nothing in a list; those get "Speaker <index>".
+_HASH_NAME = re.compile(r'^[0-9a-f]{32,}$')
+
+
 def _speakers(config: dict) -> list[dict]:
-    """Speaker names in index order, so speaker 0 (Piper's default) is first."""
+    """Speaker names, the model's default first (Subtitld shows the first one
+    as what you get without choosing, and the add-on then sends no speaker,
+    so Piper falls back to `default_speaker_id`), the rest by index."""
     id_map = config.get('speaker_id_map') or {}
-    return [{'id': name} for name, _ in sorted(id_map.items(), key=lambda kv: kv[1])]
+    default = config.get('default_speaker_id') or 0
+    ordered = sorted(id_map.items(), key=lambda kv: (kv[1] != default, kv[1]))
+    speakers = []
+    for name, index in ordered:
+        speaker = {'id': name}
+        if _HASH_NAME.match(name):
+            speaker['display_name'] = f'Speaker {index}'
+        if index == default and default != 0:
+            speaker['display_name'] = f"{speaker.get('display_name', name)} (recommended)"
+        speakers.append(speaker)
+    return speakers
+
+
+def _community_voice(entry: dict) -> dict | None:
+    """Manifest entry for a curated community voice, from its pinned revision."""
+    repo, revision, model = entry['repo'], entry['revision'], entry['model']
+    info = _fetch_json(f'https://huggingface.co/api/models/{repo}/revision/{revision}?blobs=true')
+    files = {s['rfilename']: s for s in info['siblings']}
+    config_file = entry.get('config', model + '.json')
+    base = f'https://huggingface.co/{repo}/resolve/{revision}'
+    config = _fetch_json(f'{base}/{urllib.parse.quote(config_file)}')
+    phoneme_type = config.get('phoneme_type', 'espeak')
+    if phoneme_type in UNSUPPORTED_PHONEME_TYPES:
+        print(f"  skipped {entry['id']}: {phoneme_type}", file=sys.stderr)
+        return None
+    size = files[model]['size'] + files[config_file]['size']
+    voice = {
+        'id': entry['id'],
+        'language': entry['language'],
+        'display_name': entry['display_name'],
+        'quality': entry['quality'],
+        'size_mb': round(size / (1024 * 1024)),
+        'source': {
+            'model_url': f'{base}/{urllib.parse.quote(model)}',
+            'config_url': f'{base}/{urllib.parse.quote(config_file)}',
+            'sha256': files[model]['lfs']['sha256'],
+        },
+        'license': entry['license'],
+        'credit': entry['credit'],
+    }
+    speakers = _speakers(config)
+    if len(speakers) > 1:
+        voice['speakers'] = speakers
+    return voice
 
 
 def build_voices(upstream: dict) -> list[dict]:
@@ -100,7 +158,14 @@ def build_voices(upstream: dict) -> list[dict]:
         if len(speakers) > 1:
             voice['speakers'] = speakers
         voices.append(voice)
-    return voices
+
+    curated = json.loads(COMMUNITY.read_text(encoding='utf-8'))['voices']
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        community = [v for v in pool.map(_community_voice, curated) if v]
+    clash = {v['id'] for v in community} & {v['id'] for v in voices}
+    if clash:
+        raise SystemExit(f'community voice ids clash with official ones: {sorted(clash)}')
+    return voices + community
 
 
 def main() -> int:
