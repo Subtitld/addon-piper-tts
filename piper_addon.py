@@ -24,6 +24,7 @@ import os
 import sys
 import threading
 import urllib.error
+import urllib.parse
 import urllib.request
 import wave
 from pathlib import Path
@@ -35,7 +36,7 @@ logging.basicConfig(stream=sys.stderr, level=logging.INFO,
 # Lazy import — keeps `--help` and dry-run cheap, and lets the host show a
 # friendly error if Piper itself failed to import inside the frozen bundle.
 try:
-    from piper import PiperVoice  # type: ignore
+    from piper import PiperVoice, SynthesisConfig  # type: ignore
 except ImportError as exc:  # pragma: no cover
     print(json.dumps({
         'type': 'hello_error',
@@ -47,7 +48,7 @@ except ImportError as exc:  # pragma: no cover
 
 PROTOCOL = 1
 ADDON_ID = 'piper-tts'
-VERSION = '1.0.2'
+VERSION = '26.10.1'
 
 # rhasspy's piper-voices repo on HuggingFace lays files out as
 #   <family>/<locale>/<name>/<quality>/<voice_id>.onnx
@@ -160,35 +161,65 @@ def _voice_id_parts(voice_id: str) -> tuple[str, str, str, str]:
 
 def _voice_url(voice_id: str, suffix: str) -> str:
     family, locale, name, quality = _voice_id_parts(voice_id)
-    return f'{PIPER_VOICES_BASE}/{family}/{locale}/{name}/{quality}/{voice_id}.{suffix}'
+    # Quoted: `pt_PT-tugão-medium` has a non-ASCII path, which urllib
+    # refuses to send as-is (UnicodeEncodeError, not an HTTP error).
+    path = f'{family}/{locale}/{name}/{quality}/{voice_id}.{suffix}'
+    return f'{PIPER_VOICES_BASE}/{urllib.parse.quote(path)}'
 
 
-def _download_with_progress(url: str, dest: Path, on_progress) -> None:
+def _download_with_progress(url: str, dest: Path, on_progress,
+                            attempts: int = 3) -> None:
     """Stream `url` to `dest`, atomic-renaming from `<dest>.tmp` once
     complete. `on_progress(bytes_done, bytes_total)` fires after each
     chunk; pass a no-op when you don't care.
 
     Atomic rename matters because a partial download must not be picked
     up as installed by `_load_voice` on a later request — partial onnx
-    files crash PiperVoice.load with cryptic onnxruntime errors."""
+    files crash PiperVoice.load with cryptic onnxruntime errors.
+
+    A read that stalls or drops is retried, resuming from the bytes already
+    in `.tmp` (HF's CDN honours `Range`): the "high" voices are 114 MB, and
+    one stall near the end used to throw the whole download away. HTTP
+    errors (404 and the like) are not retried."""
     tmp = dest.with_suffix(dest.suffix + '.tmp')
     tmp.parent.mkdir(parents=True, exist_ok=True)
     try:
-        # `timeout=30` covers connect + per-read; HF's CDN has been
-        # reliable so we don't bother with retries here.
-        with urllib.request.urlopen(url, timeout=30) as resp:
-            total = int(resp.headers.get('Content-Length') or 0)
-            done = 0
-            chunk = 256 * 1024  # 256 KiB; chosen to keep progress frames sub-1Hz on broadband
-            with open(tmp, 'wb') as f:
-                while True:
-                    block = resp.read(chunk)
-                    if not block:
-                        break
-                    f.write(block)
-                    done += len(block)
-                    if total:
-                        on_progress(done, total)
+        if tmp.exists():
+            tmp.unlink()  # left by a run that died mid-download
+        for attempt in range(attempts):
+            done = tmp.stat().st_size if tmp.exists() else 0
+            request = urllib.request.Request(url)
+            if done:
+                request.add_header('Range', f'bytes={done}-')
+            try:
+                # `timeout=30` covers connect + each read.
+                with urllib.request.urlopen(request, timeout=30) as resp:
+                    if done and resp.status != 206:
+                        done = 0  # server ignored Range; start over
+                    total = done + int(resp.headers.get('Content-Length') or 0)
+                    chunk = 256 * 1024  # 256 KiB; chosen to keep progress frames sub-1Hz on broadband
+                    with open(tmp, 'ab' if done else 'wb') as f:
+                        while True:
+                            block = resp.read(chunk)
+                            if not block:
+                                break
+                            f.write(block)
+                            done += len(block)
+                            if total:
+                                on_progress(done, total)
+                    # A dropped connection ends `read()` with b'', not an
+                    # error; without this check the short file would be
+                    # renamed into place as a complete voice.
+                    if total and done < total:
+                        raise ConnectionError(f'connection closed at {done} of {total} bytes')
+                break
+            except urllib.error.HTTPError:
+                raise
+            except (urllib.error.URLError, OSError) as exc:
+                if attempt == attempts - 1:
+                    raise
+                log.warning('download of %s interrupted at %d bytes (%s); resuming',
+                            url, done, exc)
         os.replace(tmp, dest)
     except (urllib.error.HTTPError, urllib.error.URLError, OSError):
         # Clean up the .tmp file so the next attempt starts fresh.
@@ -290,6 +321,23 @@ def _load_voice(voice_id: str, on_progress=None):
         return voice
 
 
+def _synthesis_config(voice, speaker_name):
+    """`SynthesisConfig` for the speaker Subtitld asked for.
+
+    Multi-speaker voices (VCTK, LibriTTS, MLS, ...) list their speakers in the
+    manifest by the names in the model's `speaker_id_map`; the host sends one
+    back as `voice_speaker`. No name means Piper's default, speaker 0, which
+    is what every request got before speakers were selectable. Single-speaker
+    voices ignore the name. Raises ValueError on a name this voice lacks."""
+    id_map = voice.config.speaker_id_map or {}
+    if not speaker_name or not id_map:
+        return None
+    speaker_id = id_map.get(str(speaker_name))
+    if speaker_id is None:
+        raise ValueError(f'voice has no speaker {speaker_name!r}')
+    return SynthesisConfig(speaker_id=speaker_id)
+
+
 # ---------------------------------------------------------------------------
 # Request handlers
 # ---------------------------------------------------------------------------
@@ -321,6 +369,12 @@ def handle_tts_synthesize(rid: str, params: dict) -> None:
         emit_error(rid, 'internal', f'voice load failed: {exc}')
         return
 
+    try:
+        syn_config = _synthesis_config(voice, params.get('voice_speaker'))
+    except ValueError as exc:
+        emit_error(rid, 'bad_params', str(exc))
+        return
+
     emit_progress(rid, 0.7, f'Loaded voice {voice_id}')
 
     # piper-tts ≥ 1.4 split the API: `synthesize()` is a generator yielding
@@ -330,7 +384,7 @@ def handle_tts_synthesize(rid: str, params: dict) -> None:
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     try:
         with wave.open(output_path, 'wb') as wf:
-            voice.synthesize_wav(text, wf)
+            voice.synthesize_wav(text, wf, syn_config=syn_config)
     except Exception as exc:
         log.exception('synthesize failed')
         emit_error(rid, 'internal', f'synthesize failed: {exc}')

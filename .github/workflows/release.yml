@@ -66,7 +66,10 @@ jobs:
       - name: Install build deps
         run: |
           python -m pip install --upgrade pip
-          pip install pyinstaller piper-tts
+          # Pinned: manifest.json's voice list is filtered against what this
+          # piper-tts can phonemize (tools/regen_voices.py), so a newer one
+          # is a deliberate bump, re-checked with that script.
+          pip install pyinstaller piper-tts==1.8.0
 
       - name: Build add-on bundle
         run: pyinstaller piper-addon.spec --distpath dist/
