@@ -1,0 +1,4 @@
+# Pure-Python packages the Haiku zip carries in bin/lib (tools/build_haiku.py).
+# numpy, ONNX Runtime and piper-tts have native code and come from the Haiku
+# packages manifest.json lists instead; piper-tts imports pathvalidate.
+pathvalidate==3.3.1
