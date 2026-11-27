@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "id": "piper-tts",
-  "version": "26.10.2",
+  "version": "26.11.1",
   "display_name": "Piper TTS (offline)",
   "summary": "Lightweight offline neural TTS based on Piper. 177 voices across 59 languages, including 5 curated community voices (Tamil, Sinhala, Kannada, Kurmanji); 26 voices have several speakers to choose from (2,801 in all). Each voice downloads on first use, 20-130 MB.",
   "author": "Subtitld add-on team",

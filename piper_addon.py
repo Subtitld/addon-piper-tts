@@ -49,7 +49,7 @@ except ImportError as exc:  # pragma: no cover
 
 PROTOCOL = 1
 ADDON_ID = 'piper-tts'
-VERSION = '26.10.2'
+VERSION = '26.11.1'
 
 # rhasspy's piper-voices repo on HuggingFace lays files out as
 #   <family>/<locale>/<name>/<quality>/<voice_id>.onnx
