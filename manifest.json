@@ -12,7 +12,14 @@
   "platforms": [
     "linux",
     "macos",
-    "windows"
+    "windows",
+    "haiku"
+  ],
+  "haiku_packages": [
+    "python3.14",
+    "numpy_python3.14",
+    "onnxruntime_python3.14",
+    "piper_tts_python3.14"
   ],
   "tasks": [
     "tts.synthesize"

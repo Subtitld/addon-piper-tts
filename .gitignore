@@ -6,3 +6,4 @@ dist/
 *.zip
 *.zip.sha256
 *.spec.bak
+release-staging-haiku/
